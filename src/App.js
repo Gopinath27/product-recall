@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route, Switch, Link, Redirect} from 'react-rout
 
 import WelcomePage from "./pages";
 import LoginPage from "./pages/login";
+import StorePage from "./pages/store";
 
 class App extends React.Component {
   render() {
@@ -12,6 +13,7 @@ class App extends React.Component {
       <Switch>
         <Route exact path="/" component={WelcomePage} />
         <Route exact path="/login" component={LoginPage} />
+        <Route exact path="/store" component={StorePage} />
       </Switch>
     </Router>
     
