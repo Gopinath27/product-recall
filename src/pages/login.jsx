@@ -1,60 +1,89 @@
-import React from "react";
+import React, {Component} from "react";
 import './Login.css';
 import Button from '@material-ui/core/Button';
-import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import {  MuiThemeProvider } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import TextField from '@material-ui/core/TextField';
-import { Link } from "react-router-dom";
+import { useHistory,Link } from "react-router-dom";
 import axios from 'axios';
+import './Login.css';
+import user from './user.png';
 
-export default class LoginPage extends React.Component {
+export default class LoginPage extends Component {
   
     constructor(props){
         super(props);
         this.state={
-        user:'',
-        pass:''
+        username:'',
+        password:'',
+        loginSuccess: "false"
         }
+        //this.handleChange = this.handleChange.bind(this)
+        this.onClickLogin = this.onClickLogin.bind(this)
        }
+      
+    
 
-    handleChange = (e) => {
-        const {name,value} = e.target
-        this.setState({[name]:value})
-    }
+    usernameChangeHandler = (e) => {
+      this.setState({username:e.target.value})
+  }
 
-    handleSubmit = (e) => {
-        console.log("Handle submit method");
-        <Link to="/store">next page</Link>
-        /*
-        var apiBaseUrl = "http://localhost:3000/api/";
+  passwordChangeHandler = (e) => {
+    this.setState({password:e.target.value})
+  }
+
+    onClickLogin = (e) => {
+       const history={useHistory};
+        console.log("Inside Onclick login");
+        
+        var apiBaseUrl = "http://localhost:8080/";
+        
         var payload={
-        "username":this.state.user,
-        "password":this.state.pass
+        "userid":'admin',
+        "password":'admin'
         }
-        axios.post(apiBaseUrl+'login', payload)
+
+        console.log(this.state.username);
+        console.log(this.state.password);
+
+        axios.get(apiBaseUrl+'login', {
+          params:
+          {
+            "userid" : this.state.username,
+            "password": this.state.password
+          }
+        })
         .then(function (response) {
         console.log(response);
-        if(response.data.code == 200){
+        if(response.status === 200){
         console.log("Login successfull");
-        <Link to="/store" />
+        window.location.href='/login/store';
         }
-        else if(response.data.code == 204){
-        console.log("Username password do not match");
-        alert("username password do not match")
-        }
-        else{
+        else if(response.status === 201){
         console.log("Username does not exists");
-        alert("Username does not exist");
+        alert("Username does not exists")
+        }
+        else if(response.data.code === 202){
+          console.log("Username password do not match");
+          alert("username password do not match")
+          }
+        else{
+        console.log("Error occurred 404");
+        alert("Error occurred 404");
         }
         })
         .catch(function (error) {
         console.log(error);
-        });*/
+        });
     }
 
-    render () {  
+    render () {
+      const {classes} =this.props; 
       return (
+      
+
         <div className="Login-header">
+          <img src={user} className="User-logo" alt="user" />
                 <h1>LOGIN</h1>
         <MuiThemeProvider>
           <div>
@@ -62,22 +91,25 @@ export default class LoginPage extends React.Component {
              title="Login"
            />
            <TextField
-             hintText="Enter your Username"
-             floatingLabelText="Username"
-             onChange = {(event,newValue) => this.setState({username:newValue})}
+             placeholder="Username.."
+             value={this.state.username}
+             onChange = {this.usernameChangeHandler}
+             //onChange={this.handleChange}
              />
-           <br/>
+           <br/><br/>
              <TextField
                type="password"
-               hintText="Enter your Password"
-               floatingLabelText="Password"
-               onChange = {(event,newValue) => this.setState({password:newValue})}
+               placeholder="Password.."
+               value={this.state.password}
+               onChange = {this.passwordChangeHandler}
+               //onChange={this.handleChange}
                />
              <br/> <br/>
-             <Button onSubmit={this.handleSubmit} variant="contained" color="primary">Login</Button>
+             <Button onClick={this.onClickLogin} variant="contained" color="primary">Login</Button>
              </div>
          </MuiThemeProvider>
          </div>
+         
         );
     }
 }

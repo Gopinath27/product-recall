@@ -1,4 +1,4 @@
-import React from "react";
+import React, {Component} from "react";
 import './App.css';
 import {BrowserRouter as Router, Route, Switch, Link, Redirect} from 'react-router-dom';
 
@@ -13,7 +13,7 @@ class App extends React.Component {
       <Switch>
         <Route exact path="/" component={WelcomePage} />
         <Route exact path="/login" component={LoginPage} />
-        <Route exact path="/store" component={StorePage} />
+        <Route exact path="/login/store" component={StorePage} />
       </Switch>
     </Router>
     
